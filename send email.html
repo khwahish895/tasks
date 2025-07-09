@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Send Email</title>
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        (function () {
+            emailjs.init("qO7j8QpTxD12PTNvl");
+        })();
+    </script>
+    <style>
+        body {
+            background: #f2f2f2;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .container h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .container input[type="text"],
+        .container input[type="email"],
+        .container textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 16px;
+            resize: vertical;
+        }
+
+        .container input[type="text"]:focus,
+        .container input[type="email"]:focus,
+        .container textarea:focus {
+            border-color: #007BFF;
+            background-color: #e6f2ff;
+        }
+
+        .container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Send an Email</h2>
+
+        <form id="emailForm">
+            <input type="text" name="to_name" placeholder="Receiver's Name" required>
+            <input type="email" name="to_email" placeholder="Receiver's Email" required>
+            <textarea name="message" placeholder="Your message" rows="5" required></textarea>
+            <button type="submit">Send Email</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('emailForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            emailjs.sendForm('service_l3g2b6o', 'template_qvk2phn', this)
+                .then(() => alert("Email sent successfully!"))
+                .catch(error => alert("Failed to send email: " + JSON.stringify(error)));
+        });
+    </script>
+
+</body>
+
+</html>

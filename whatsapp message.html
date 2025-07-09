@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Communication Center</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e0f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #006064;
+        }
+
+        .form-box {
+            background: #ffffff;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-box h2 {
+            margin-top: 0;
+            color: #00796b;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #004d40;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Communication Center</h1>
+
+        <!-- SMS -->
+        <form id="smsForm" class="form-box">
+            <h2>Send SMS</h2>
+            <input type="text" id="smsNumber" placeholder="Phone Number" required>
+            <textarea id="smsMessage" placeholder="Your Message" required></textarea>
+            <button type="submit">Send SMS</button>
+        </form>
+
+        <!-- WhatsApp -->
+        <form id="whatsappForm" class="form-box">
+            <h2>Send WhatsApp</h2>
+            <input type="text" id="waNumber" placeholder="WhatsApp Number" required>
+            <textarea id="waMessage" placeholder="WhatsApp Message" required></textarea>
+            <button type="submit">Send WhatsApp</button>
+        </form>
+
+        <!-- Call -->
+        <form id="callForm" class="form-box">
+            <h2>Make a Call</h2>
+            <input type="text" id="callNumber" placeholder="Phone Number" required>
+            <button type="submit">Call Now</button>
+        </form>
+
+        <!-- Google Search -->
+        <form id="googleSearchForm" class="form-box">
+            <h2>Google Search</h2>
+            <input type="text" id="googleQuery" placeholder="Search on Google..." required>
+            <button type="submit">Search Google</button>
+        </form>
+
+        <!-- Bing Search -->
+        <form id="bingSearchForm" class="form-box">
+            <h2>Bing Search</h2>
+            <input type="text" id="bingQuery" placeholder="Search on Bing..." required>
+            <button type="submit">Search Bing</button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+            // Simulate SMS Sending
+            $('#smsForm').submit(function (e) {
+                e.preventDefault();
+                const number = $('#smsNumber').val();
+                const message = $('#smsMessage').val();
+                alert('📩 Simulating SMS to ' + number + '\n\nMessage: ' + message);
+            });
+
+            // Simulate WhatsApp Sending
+            $('#whatsappForm').submit(function (e) {
+                e.preventDefault();
+                const number = $('#waNumber').val();
+                const message = $('#waMessage').val();
+                const link = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+                window.open(link, '_blank');
+            });
+
+            // Simulate Call
+            $('#callForm').submit(function (e) {
+                e.preventDefault();
+                const number = $('#callNumber').val();
+                alert('📞 Simulating call to: ' + number);
+                window.open('tel:' + number);
+            });
+
+            // Google Search
+            $('#googleSearchForm').submit(function (e) {
+                e.preventDefault();
+                const query = $('#googleQuery').val();
+                const url = 'https://www.google.com/search?q=' + encodeURIComponent(query);
+                window.open(url, '_blank');
+            });
+
+            // Bing Search
+            $('#bingSearchForm').submit(function (e) {
+                e.preventDefault();
+                const query = $('#bingQuery').val();
+                const url = 'https://www.bing.com/search?q=' + encodeURIComponent(query);
+                window.open(url, '_blank');
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

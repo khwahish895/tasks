@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webcam Photo Capture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px #fff;
+        }
+
+        .camera-container {
+            background-color: #ffffffcc;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        video,
+        canvas {
+            width: 100%;
+            max-width: 360px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #0077ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #005cd4;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>📸 Webcam Photo Capture with Save</h2>
+
+    <div class="camera-container">
+        <video id="webcam" autoplay playsinline></video><br>
+        <button onclick="capturePhoto()">📷 Capture Photo</button>
+        <button onclick="savePhoto()">💾 Save Photo</button><br><br>
+        <canvas id="snapshot"></canvas>
+    </div>
+
+    <script>
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('snapshot');
+        const context = canvas.getContext('2d');
+
+        // Start the webcam
+        async function startWebcam() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (err) {
+                alert('Error accessing webcam: ' + err);
+            }
+        }
+
+        // Capture photo
+        function capturePhoto() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0);
+        }
+
+        // Save photo
+        function savePhoto() {
+            const image = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = image;
+            link.download = 'captured_photo.png';
+            link.click();
+        }
+
+        window.onload = startWebcam;
+    </script>
+
+</body>
+
+</html>

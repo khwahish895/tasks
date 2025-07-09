@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gmail Last Email Fetcher</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4285f4;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .config-section {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .config-section h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+
+        .config-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .setup-instructions {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .setup-instructions h3 {
+            color: #1976d2;
+            margin-top: 0;
+        }
+
+        .setup-instructions ol {
+            margin-left: 20px;
+        }
+
+        .setup-instructions code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .auth-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #4285f4, #34a853);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+            margin: 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .email-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #4285f4;
+        }
+
+        .email-field {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-field strong {
+            color: #4285f4;
+            display: inline-block;
+            min-width: 100px;
+        }
+
+        .email-body {
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            word-wrap: break-word;
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .status.loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .debug-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .toggle-debug {
+            background: #6c757d;
+            font-size: 12px;
+            padding: 8px 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📧 Gmail Last Email Fetcher</h1>
+
+        <div class="setup-instructions">
+            <h3>📋 Complete Setup Instructions:</h3>
+            <ol>
+                <li>Go to <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>
+                <li>Create a new project or select an existing one</li>
+                <li>Go to "APIs & Services" → "Library"</li>
+                <li>Search for "Gmail API" and enable it</li>
+                <li>Go to "APIs & Services" → "Credentials"</li>
+                <li>Click "Create Credentials" → "OAuth client ID"</li>
+                <li>Choose "Web application" as application type</li>
+                <li>Add your current domain to "Authorized JavaScript origins" (e.g., http://localhost:3000)</li>
+                <li>Copy the Client ID and paste it below</li>
+                <li>Click "Initialize API" after entering your Client ID</li>
+            </ol>
+        </div>
+
+        <div class="config-section">
+            <h3>⚙️ Configuration</h3>
+            <p>Enter your Google OAuth Client ID:</p>
+            <input type="text" id="clientIdInput" class="config-input" placeholder="1068457243985-omdq60nd4qvptdu40usm79ucdnevvsr5.apps.googleusercontent.com" />
+            <br>
+            <button onclick="initializeAPI()">Initialize API</button>
+            <button onclick="testConnection()">Test Connection</button>
+        </div>
+
+        <div class="auth-section">
+            <button id="authButton" onclick="handleAuth()" disabled>Sign In with Google</button>
+            <button id="fetchButton" onclick="fetchLastEmail()" disabled>Fetch Last Email</button>
+            <button id="signOutButton" onclick="signOut()" style="display: none;">Sign Out</button>
+            <button class="toggle-debug" onclick="toggleDebug()">Toggle Debug Info</button>
+        </div>
+
+        <div id="status"></div>
+        <div id="emailContent"></div>
+        <div id="debugInfo" class="debug-info" style="display: none;"></div>
+    </div>
+
+    <script>
+        let isGapiLoaded = false;
+        let isGapiInitialized = false;
+        let GoogleAuth = null;
+        let currentClientId = '';
+
+        const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest';
+        const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
+
+        function log(message) {
+            console.log(message);
+            const debugInfo = document.getElementById('debugInfo');
+            debugInfo.innerHTML += new Date().toISOString() + ': ' + message + '\n';
+            debugInfo.scrollTop = debugInfo.scrollHeight;
+        }
+
+        function toggleDebug() {
+            const debugInfo = document.getElementById('debugInfo');
+            debugInfo.style.display = debugInfo.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+            log(`Status: ${type} - ${message}`);
+
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusDiv.innerHTML = '';
+                }, 5000);
+            }
+        }
+
+        function initializeAPI() {
+            const clientId = document.getElementById('clientIdInput').value.trim();
+
+            if (!clientId) {
+                showStatus('Please enter your Google OAuth Client ID', 'error');
+                return;
+            }
+
+            currentClientId = clientId;
+            log('Initializing API with Client ID: ' + clientId);
+
+            if (!window.gapi) {
+                showStatus('Loading Google API...', 'loading');
+                loadGoogleAPI();
+            } else {
+                initializeGapi();
+            }
+        }
+
+        function loadGoogleAPI() {
+            const script = document.createElement('script');
+            script.src = 'https://apis.google.com/js/api.js';
+            script.onload = () => {
+                log('Google API script loaded');
+                isGapiLoaded = true;
+                initializeGapi();
+            };
+            script.onerror = () => {
+                showStatus('Failed to load Google API script', 'error');
+            };
+            document.head.appendChild(script);
+        }
+
+        function initializeGapi() {
+            if (!window.gapi) {
+                showStatus('Google API not available', 'error');
+                return;
+            }
+
+            log('Initializing GAPI...');
+            showStatus('Initializing Google API...', 'loading');
+
+            window.gapi.load('client:auth2', {
+                callback: initializeGapiClient,
+                onerror: () => {
+                    showStatus('Failed to load GAPI client', 'error');
+                }
+            });
+        }
+
+        async function initializeGapiClient() {
+            try {
+                log('Initializing GAPI client...');
+
+                await window.gapi.client.init({
+                    clientId: currentClientId,
+                    discoveryDocs: [DISCOVERY_DOC],
+                    scope: SCOPES
+                });
+
+                log('GAPI client initialized successfully');
+
+                GoogleAuth = window.gapi.auth2.getAuthInstance();
+
+                if (GoogleAuth) {
+                    log('Auth instance obtained');
+
+                    // Check if user is already signed in
+                    if (GoogleAuth.isSignedIn.get()) {
+                        log('User already signed in');
+                        updateSignInStatus(true);
+                    } else {
+                        log('User not signed in');
+                        updateSignInStatus(false);
+                    }
+
+                    document.getElementById('authButton').disabled = false;
+                    showStatus('API initialized successfully! You can now sign in.', 'success');
+                    isGapiInitialized = true;
+                } else {
+                    throw new Error('Failed to get auth instance');
+                }
+            } catch (error) {
+                log('Error initializing GAPI client: ' + error.message);
+                showStatus('Error initializing API: ' + error.message, 'error');
+            }
+        }
+
+        function testConnection() {
+            if (!currentClientId) {
+                showStatus('Please enter Client ID and initialize API first', 'error');
+                return;
+            }
+
+            log('Testing connection...');
+            showStatus('Testing connection...', 'loading');
+
+            if (window.gapi && window.gapi.client) {
+                showStatus('Connection test successful!', 'success');
+                log('GAPI client is available');
+            } else {
+                showStatus('Connection test failed - GAPI not loaded', 'error');
+                log('GAPI client not available');
+            }
+        }
+
+        async function handleAuth() {
+            if (!isGapiInitialized || !GoogleAuth) {
+                showStatus('Please initialize the API first', 'error');
+                return;
+            }
+
+            try {
+                log('Attempting to sign in...');
+                showStatus('Signing in...', 'loading');
+
+                const authResult = await GoogleAuth.signIn();
+                log('Sign in successful');
+
+                updateSignInStatus(true);
+                showStatus('Successfully signed in!', 'success');
+
+                // Get user info
+                const profile = authResult.getBasicProfile();
+                log('User: ' + profile.getName() + ' (' + profile.getEmail() + ')');
+
+            } catch (error) {
+                log('Sign in error: ' + error.error + ' - ' + error.details);
+                showStatus('Sign in failed: ' + (error.error || error.message), 'error');
+            }
+        }
+
+        function signOut() {
+            if (GoogleAuth) {
+                GoogleAuth.signOut().then(() => {
+                    log('Signed out successfully');
+                    updateSignInStatus(false);
+                    showStatus('Signed out successfully', 'success');
+                    document.getElementById('emailContent').innerHTML = '';
+                });
+            }
+        }
+
+        function updateSignInStatus(isSignedIn) {
+            const authButton = document.getElementById('authButton');
+            const fetchButton = document.getElementById('fetchButton');
+            const signOutButton = document.getElementById('signOutButton');
+
+            if (isSignedIn) {
+                authButton.style.display = 'none';
+                fetchButton.disabled = false;
+                signOutButton.style.display = 'inline-block';
+                log('UI updated for signed in state');
+            } else {
+                authButton.style.display = 'inline-block';
+                fetchButton.disabled = true;
+                signOutButton.style.display = 'none';
+                log('UI updated for signed out state');
+            }
+        }
+
+        async function fetchLastEmail() {
+            if (!GoogleAuth || !GoogleAuth.isSignedIn.get()) {
+                showStatus('Please sign in first', 'error');
+                return;
+            }
+
+            try {
+                log('Fetching last email...');
+                showStatus('Fetching last email...', 'loading');
+
+                // Get the list of messages
+                const listResponse = await window.gapi.client.gmail.users.messages.list({
+                    userId: 'me',
+                    maxResults: 1,
+                    q: 'in:inbox'
+                });
+
+                log('Messages list response received');
+
+                const messages = listResponse.result.messages;
+
+                if (!messages || messages.length === 0) {
+                    showStatus('No emails found in inbox', 'error');
+                    return;
+                }
+
+                const messageId = messages[0].id;
+                log('Message ID: ' + messageId);
+
+                // Get the full message details
+                const messageResponse = await window.gapi.client.gmail.users.messages.get({
+                    userId: 'me',
+                    id: messageId,
+                    format: 'full'
+                });
+
+                log('Message details received');
+                const message = messageResponse.result;
+
+                displayEmailInfo(message);
+                showStatus('Email fetched successfully!', 'success');
+
+            } catch (error) {
+                log('Error fetching email: ' + JSON.stringify(error));
+                const errorMessage = error.result?.error?.message || error.message || 'Unknown error';
+                showStatus('Error fetching email: ' + errorMessage, 'error');
+            }
+        }
+
+        function displayEmailInfo(message) {
+            const headers = message.payload.headers;
+            const getHeader = (name) => {
+                const header = headers.find(h => h.name.toLowerCase() === name.toLowerCase());
+                return header ? header.value : 'N/A';
+            };
+
+            const subject = getHeader('Subject');
+            const from = getHeader('From');
+            const to = getHeader('To');
+            const date = getHeader('Date');
+            const snippet = message.snippet;
+
+            // Extract body content
+            let body = '';
+            try {
+                if (message.payload.body && message.payload.body.data) {
+                    body = atob(message.payload.body.data.replace(/-/g, '+').replace(/_/g, '/'));
+                } else if (message.payload.parts) {
+                    // Handle multipart messages
+                    for (const part of message.payload.parts) {
+                        if (part.mimeType === 'text/plain' && part.body && part.body.data) {
+                            body = atob(part.body.data.replace(/-/g, '+').replace(/_/g, '/'));
+                            break;
+                        }
+                    }
+
+                    // If no plain text, try HTML
+                    if (!body) {
+                        for (const part of message.payload.parts) {
+                            if (part.mimeType === 'text/html' && part.body && part.body.data) {
+                                body = atob(part.body.data.replace(/-/g, '+').replace(/_/g, '/'));
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                body = 'Error decoding email body';
+                log('Error decoding body: ' + e.message);
+            }
+
+            const emailContent = document.getElementById('emailContent');
+            emailContent.innerHTML = `
+                <div class="email-info">
+                    <h3>📧 Last Email Information</h3>
+                    <div class="email-field">
+                        <strong>Subject:</strong> ${escapeHtml(subject)}
+                    </div>
+                    <div class="email-field">
+                        <strong>From:</strong> ${escapeHtml(from)}
+                    </div>
+                    <div class="email-field">
+                        <strong>To:</strong> ${escapeHtml(to)}
+                    </div>
+                    <div class="email-field">
+                        <strong>Date:</strong> ${new Date(date).toLocaleString()}
+                    </div>
+                    <div class="email-field">
+                        <strong>Snippet:</strong> ${escapeHtml(snippet)}
+                    </div>
+                    <div class="email-field">
+                        <strong>Message ID:</strong> ${message.id}
+                    </div>
+                    <div class="email-field">
+                        <strong>Thread ID:</strong> ${message.threadId}
+                    </div>
+                    ${body ? `
+                        <div class="email-field">
+                            <strong>Body Preview:</strong>
+                            <div class="email-body">${escapeHtml(body.substring(0, 1000))}${body.length > 1000 ? '...' : ''}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            log('Email information displayed');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize debug info
+        window.onload = function () {
+            log('Page loaded');
+            showStatus('Ready - Enter your Client ID and click Initialize API', 'success');
+        };
+    </script>
+</body>
+
+</html>

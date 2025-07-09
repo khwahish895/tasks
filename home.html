@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Function Web App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background: #f9f9f9;
+            border-left: 4px solid #3498db;
+        }
+
+        h2 {
+            color: #3498db;
+            margin-top: 0;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #cameraView,
+        #photoPreview {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: block;
+        }
+
+        #map {
+            width: 100%;
+            height: 300px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flex-item {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .social-button {
+            padding: 10px 15px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .map-controls {
+            margin: 10px 0;
+        }
+
+        #emailStatus,
+        #whatsappStatus,
+        #smsStatus,
+        #locationStatus {
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .nearby-places {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .place-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-form textarea {
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Multi-Function Web App</h1>
+
+        <!-- Camera and Photo Section -->
+        <div class="section">
+            <h2>1. Camera Functions</h2>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <button id="openCamera">Open Camera</button>
+                    <video id="cameraView" autoplay playsinline></video>
+                    <button id="takePhoto" disabled>Take Photo</button>
+                </div>
+                <div class="flex-item">
+                    <canvas id="photoCanvas" style="display: none;"></canvas>
+                    <img id="photoPreview" src="https://placehold.co/500x300?text=Preview+will+appear+here"
+                        alt="Photo preview area">
+                    <button id="savePhoto" disabled>Save Photo</button>
+                    <button id="clearPhoto">Clear Photo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Section -->
+        <div class="section">
+            <h2>2. Email Functions</h2>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <div id="emailStatus"></div>
+                    <label for="emailRecipient">Recipient Email:</label>
+                    <input type="email" id="emailRecipient" placeholder="khwahishsingh2005@gmail.com">
+
+                    <label for="emailSubject">Subject:</label>
+                    <input type="text" id="emailSubject" placeholder="Email subject">
+
+                    <label for="emailBody">Message:</label>
+                    <textarea id="emailBody" placeholder="Your message here"></textarea>
+
+                    <button id="sendEmail">Send Email</button>
+                </div>
+                <div class="flex-item">
+                    <h3>3. Send Photo via Email</h3>
+                    <button id="sendPhotoEmail" disabled>Send Current Photo to Email</button>
+                    <div id="photoEmailStatus" class="status"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Email Section -->
+        <div class="section">
+            <h2>4. Record Video and Send to Email</h2>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <button id="startRecording">Start Recording</button>
+                    <button id="stopRecording" disabled>Stop Recording</button>
+                    <video id="videoPreview" autoplay playsinline style="width: 100%;"></video>
+                </div>
+                <div class="flex-item">
+                    <video id="recordedVideo" controls style="width: 100%; display: none;"></video>
+                    <button id="sendVideoEmail" disabled>Send Video to Email</button>
+                    <div id="videoEmailStatus" class="status"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messaging Section -->
+        <div class="section">
+            <h2>5-6. Messaging Functions</h2>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <h3>5. WhatsApp</h3>
+                    <label for="whatsappNumber">Phone Number (with country code):</label>
+                    <input type="text" id="whatsappNumber" placeholder="7424988589">
+
+                    <label for="whatsappMessage">Message:</label>
+                    <textarea id="whatsappMessage" placeholder="Your WhatsApp message"></textarea>
+
+                    <button id="sendWhatsApp">Send WhatsApp Message</button>
+                    <div id="whatsappStatus"></div>
+                </div>
+                <div class="flex-item">
+                    <h3>6. SMS</h3>
+                    <label for="smsNumber">Phone Number:</label>
+                    <input type="text" id="smsNumber" placeholder="7424988589">
+
+                    <label for="smsMessage">Message:</label>
+                    <textarea id="smsMessage" placeholder="Your SMS message"></textarea>
+
+                    <button id="sendSMS">Send SMS</button>
+                    <div id="smsStatus"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Section -->
+        <div class="section">
+            <h2>7-10. Location Functions</h2>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <button id="getLocation">Get Current Location</button>
+                    <div id="locationStatus"></div>
+                    <div id="locationDetails"></div>
+                </div>
+                <div class="flex-item">
+                    <div id="map"></div>
+                    <div class="map-controls">
+                        <button id="showMap">Show Location on Map</button>
+                        <button id="getRoute" disabled>Get Route</button>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 20px;">
+                <h3>10. Nearby Places</h3>
+                <button id="findNearby" disabled>Find Nearby Places</button>
+                <div id="nearbyPlaces" class="nearby-places"></div>
+            </div>
+        </div>
+
+        <!-- Social Media Section -->
+        <div class="section">
+            <h2>11-12. Social Media Functions</h2>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <h3>11. Gmail Integration</h3>
+                    <button id="connectGmail">Connect to Gmail</button>
+                    <div id="gmailStatus"></div>
+                    <div id="emailsList" style="margin-top: 15px;"></div>
+                </div>
+                <div class="flex-item">
+                    <h3>12. Social Media Posts</h3>
+                    <div class="social-buttons">
+                        <div class="social-button" style="background-color: #25D366;" id="whatsappPost">WhatsApp</div>
+                        <div class="social-button" style="background-color: #E1306C;" id="instagramPost">Instagram</div>
+                    </div>
+                    <div class="post-form" style="margin-top: 15px;">
+                        <label for="postText">Post Content:</label>
+                        <textarea id="postText" placeholder="What's on your mind?"></textarea>
+                        <button id="createPost">Create Post</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Camera and photo functionality
+        const cameraView = document.getElementById('cameraView');
+        const takePhoto = document.getElementById('takePhoto');
+        const photoCanvas = document.getElementById('photoCanvas');
+        const photoPreview = document.getElementById('photoPreview');
+        const savePhoto = document.getElementById('savePhoto');
+        const clearPhoto = document.getElementById('clearPhoto');
+        const sendPhotoEmail = document.getElementById('sendPhotoEmail');
+        let stream = null;
+        let capturedPhoto = null;
+
+        document.getElementById('openCamera').addEventListener('click', async () => {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                cameraView.srcObject = stream;
+                takePhoto.disabled = false;
+                document.getElementById('openCamera').disabled = true;
+            } catch (error) {
+                showStatus('error', 'Camera access denied or not available.');
+            }
+        });
+
+        takePhoto.addEventListener('click', () => {
+            const context = photoCanvas.getContext('2d');
+            photoCanvas.width = cameraView.videoWidth;
+            photoCanvas.height = cameraView.videoHeight;
+            context.drawImage(cameraView, 0, 0, photoCanvas.width, photoCanvas.height);
+
+            capturedPhoto = photoCanvas.toDataURL('e:\Khwahish singh\KHWAHISH PHOTOS ,VIDEOS AND WORK\PHOTOS\image.jpg');
+            photoPreview.src = capturedPhoto;
+            savePhoto.disabled = false;
+            sendPhotoEmail.disabled = false;
+        });
+
+        savePhoto.addEventListener('click', () => {
+            if (capturedPhoto) {
+                const link = document.createElement('a');
+                link.href = capturedPhoto;
+                link.download = 'e:\Khwahish singh\KHWAHISH PHOTOS ,VIDEOS AND WORK\PHOTOS\photo.jpg';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showStatus('emailStatus', 'Photo saved successfully!', 'success');
+            }
+        });
+
+        clearPhoto.addEventListener('click', () => {
+            photoPreview.src = 'https://placehold.co/500x300?text=Preview+will+appear+here';
+            capturedPhoto = null;
+            savePhoto.disabled = true;
+            sendPhotoEmail.disabled = true;
+        });
+
+        // Email functionality
+        document.getElementById('sendEmail').addEventListener('click', () => {
+            const recipient = document.getElementById('emailRecipient').value;
+            const subject = document.getElementById('emailSubject').value;
+            const body = document.getElementById('emailBody').value;
+
+            if (recipient && subject && body) {
+                window.open(`mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+                showStatus('emailStatus', 'Email client opened with your message.', 'success');
+            } else {
+                showStatus('emailStatus', 'Please fill all email fields.', 'error');
+            }
+        });
+
+        sendPhotoEmail.addEventListener('click', () => {
+            if (!capturedPhoto) {
+                showStatus('photoEmailStatus', 'No photo to send.', 'error');
+                return;
+            }
+
+            const recipient = prompt("Enter recipient email:");
+            if (recipient) {
+                // In a real app, you would need to upload the photo to a server
+                // and then send the link in the email, or use a service like EmailJS
+                showStatus('photoEmailStatus',
+                    'In a real implementation, this would send the photo via email service.',
+                    'success');
+            }
+        });
+
+        // Video recording functionality
+        const startRecording = document.getElementById('startRecording');
+        const stopRecording = document.getElementById('stopRecording');
+        const videoPreview = document.getElementById('videoPreview');
+        const recordedVideo = document.getElementById('recordedVideo');
+        const sendVideoEmail = document.getElementById('sendVideoEmail');
+        let mediaRecorder;
+        let recordedChunks = [];
+
+        startRecording.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                videoPreview.srcObject = stream;
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = function (e) {
+                    if (e.data.size > 0) {
+                        recordedChunks.push(e.data);
+                    }
+                };
+
+                mediaRecorder.onstop = function () {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    recordedVideo.src = URL.createObjectURL(blob);
+                    recordedVideo.style.display = 'block';
+                    sendVideoEmail.disabled = false;
+                    recordedChunks = [];
+                };
+
+                mediaRecorder.start();
+                startRecording.disabled = true;
+                stopRecording.disabled = false;
+            } catch (error) {
+                showStatus('videoEmailStatus', 'Error accessing camera/microphone.', 'error');
+            }
+        });
+
+        stopRecording.addEventListener('click', () => {
+            mediaRecorder.stop();
+            videoPreview.srcObject.getTracks().forEach(track => track.stop());
+            startRecording.disabled = false;
+            stopRecording.disabled = true;
+        });
+
+        sendVideoEmail.addEventListener('click', () => {
+            const recipient = prompt("Enter recipient email:");
+            if (recipient) {
+                // In a real app, you would upload the video to a server first
+                showStatus('videoEmailStatus',
+                    'In a real implementation, this would upload video and send via email service.',
+                    'success');
+            }
+        });
+
+        // WhatsApp functionality
+        document.getElementById('sendWhatsApp').addEventListener('click', () => {
+            const number = document.getElementById('whatsappNumber').value;
+            const message = document.getElementById('whatsappMessage').value;
+
+            if (number && message) {
+                window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`, '_blank');
+                showStatus('whatsappStatus', 'WhatsApp web opened with your message.', 'success');
+            } else {
+                showStatus('whatsappStatus', 'Please provide both number and message.', 'error');
+            }
+        });
+
+        // SMS functionality
+        document.getElementById('sendSMS').addEventListener('click', () => {
+            const number = document.getElementById('smsNumber').value;
+            const message = document.getElementById('smsMessage').value;
+
+            if (number && message) {
+                window.open(`sms:${number}?body=${encodeURIComponent(message)}`, '_blank');
+                showStatus('smsStatus', 'SMS client opened with your message.', 'success');
+            } else {
+                showStatus('smsStatus', 'Please provide both number and message.', 'error');
+            }
+        });
+
+        // Location functionality
+        document.getElementById('getLocation').addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const { latitude, longitude } = position.coords;
+                        document.getElementById('locationDetails').innerHTML = `
+                            <p>Latitude: ${latitude}</p>
+                            <p>Longitude: ${longitude}</p>
+                        `;
+                        showStatus('locationStatus', 'Location fetched successfully!', 'success');
+
+                        // Enable map buttons
+                        document.getElementById('showMap').disabled = false;
+                        document.getElementById('getRoute').disabled = false;
+                        document.getElementById('findNearby').disabled = false;
+
+                        // Store location for other functions
+                        window.currentLocation = { lat: latitude, lng: longitude };
+                    },
+                    error => {
+                        showStatus('locationStatus', `Error getting location: ${error.message}`, 'error');
+                    }
+                );
+            } else {
+                showStatus('locationStatus', 'Geolocation is not supported by your browser.', 'error');
+            }
+        });
+
+        // Map functionality
+        document.getElementById('showMap').addEventListener('click', () => {
+            if (!window.currentLocation) {
+                showStatus('locationStatus', 'Please get your location first.', 'error');
+                return;
+            }
+
+            // Load Google Maps API dynamically
+            loadGoogleMaps().then(() => {
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: window.currentLocation.lat, lng: window.currentLocation.lng },
+                    zoom: 15
+                });
+
+                new google.maps.Marker({
+                    position: { lat: window.currentLocation.lat, lng: window.currentLocation.lng },
+                    map: map,
+                    title: "Your Location"
+                });
+
+                window.currentMap = map;
+            }).catch(error => {
+                showStatus('locationStatus', 'Failed to load Google Maps.', 'error');
+            });
+        });
+
+        document.getElementById('getRoute').addEventListener('click', () => {
+            const destination = prompt("Enter destination address:");
+            if (destination && window.currentMap && window.currentLocation) {
+                const directionsService = new google.maps.DirectionsService();
+                const directionsRenderer = new google.maps.DirectionsRenderer();
+                directionsRenderer.setMap(window.currentMap);
+
+                directionsService.route(
+                    {
+                        origin: { lat: window.currentLocation.lat, lng: window.currentLocation.lng },
+                        destination: destination,
+                        travelMode: 'DRIVING'
+                    },
+                    (response, status) => {
+                        if (status === 'OK') {
+                            directionsRenderer.setDirections(response);
+                            showStatus('locationStatus', 'Route displayed on map.', 'success');
+                        } else {
+                            showStatus('locationStatus', 'Directions request failed.', 'error');
+                        }
+                    }
+                );
+            }
+        });
+
+        // Nearby places functionality
+        document.getElementById('findNearby').addEventListener('click', () => {
+            if (!window.currentLocation) {
+                showStatus('locationStatus', 'Please get your location first.', 'error');
+                return;
+            }
+
+            // In a real app, you would use the Places API
+            const mockPlaces = [
+                { name: "Coffee Shop", type: "cafe", distance: "0.2 miles" },
+                { name: "Supermarket", type: "grocery", distance: "0.5 miles" },
+                { name: "Park", type: "park", distance: "0.3 miles" },
+                { name: "Restaurant", type: "restaurant", distance: "0.4 miles" }
+            ];
+
+            const placesHTML = mockPlaces.map(place => `
+                <div class="place-card">
+                    <h4>${place.name}</h4>
+                    <p>Type: ${place.type}</p>
+                    <p>Distance: ${place.distance}</p>
+                </div>
+            `).join('');
+
+            document.getElementById('nearbyPlaces').innerHTML = placesHTML;
+            showStatus('locationStatus', 'Nearby places displayed (mock data).', 'success');
+        });
+
+        // Gmail integration (mock)
+        document.getElementById('connectGmail').addEventListener('click', () => {
+            // In a real app, you would use the Gmail API with OAuth
+            const mockEmails = [
+                { from: "service@google.com", subject: "Your account statement", date: "May 15" },
+                { from: "newsletter@site.com", subject: "Weekly digest", date: "May 14" },
+                { from: "support@acme.com", subject: "Your support ticket", date: "May 13" }
+            ];
+
+            const emailsHTML = mockEmails.map(email => `
+                <div style="padding: 10px; border-bottom: 1px solid #eee;">
+                    <div><strong>${email.from}</strong></div>
+                    <div>${email.subject}</div>
+                    <div style="color: #666; font-size: 0.8em;">${email.date}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('emailsList').innerHTML = emailsHTML;
+            showStatus('gmailStatus', 'Mock emails displayed (not real connection).', 'success');
+        });
+
+        // Social media post functionality
+        document.getElementById('createPost').addEventListener('click', () => {
+            const postText = document.getElementById('postText').value;
+            if (!postText) {
+                alert("Please enter some text for your post.");
+                return;
+            }
+
+            const platform = document.querySelector('.social-button.active');
+            if (!platform) {
+                alert("Please select a platform first.");
+                return;
+            }
+
+            // In a real app, you would use the platform's API
+            alert(`Post would be created on ${platform.id.replace('Post', '')}:\n\n${postText}`);
+        });
+
+        // Social platform selection
+        document.querySelectorAll('.social-button').forEach(button => {
+            button.addEventListener('click', function () {
+                document.querySelectorAll('.social-button').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Helper functions
+        function showStatus(elementId, message, type = '') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = type;
+        }
+
+        function loadGoogleMaps() {
+            return new Promise((resolve, reject) => {
+                if (window.google && window.google.maps) {
+                    resolve();
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places`;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+    </script>
+</body>
+
+</html>

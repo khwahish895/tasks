@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask AJAX Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loading {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .message {
+            transition: all 0.3s ease;
+        }
+
+        .error-bg {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .success-bg {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-bold text-gray-800">Flask AJAX Demo</h1>
+                    <div class="status-indicator hidden" id="status">
+                        <span class="loading"></span>
+                        <span class="text-sm text-gray-600">Processing request...</span>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Simple GET Example -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h2 class="font-semibold text-lg mb-2">GET Request</h2>
+                        <p class="text-gray-600 mb-4">Click to fetch server time via AJAX GET</p>
+                        <button onclick="fetchServerTime()"
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition flex items-center justify-center"
+                            id="timeButton">
+                            <span id="timeButtonText">Get Server Time</span>
+                        </button>
+                        <div id="timeResult" class="mt-3 p-2 bg-gray-100 rounded text-gray-800"></div>
+                    </div>
+
+                    <!-- POST Form Example -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h2 class="font-semibold text-lg mb-2">POST Request</h2>
+                        <p class="text-gray-600 mb-4">Submit data to the server</p>
+                        <div class="space-y-3">
+                            <input type="text" id="nameInput" placeholder="Your name"
+                                class="w-full px-3 py-2 border border-gray-300 rounded">
+                            <button onclick="submitData()"
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition">
+                                Submit
+                            </button>
+                        </div>
+                        <div id="greetingResult" class="mt-3 p-2 bg-gray-100 rounded text-gray-800"></div>
+                    </div>
+
+                    <!-- Dynamic Content Example -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h2 class="font-semibold text-lg mb-2">Dynamic Content</h2>
+                        <p class="text-gray-600 mb-4">Load content dynamically from server</p>
+                        <button onclick="loadDynamicContent()"
+                            class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded transition">
+                            Load Content
+                        </button>
+                        <div id="dynamicContent" class="mt-3 p-2 bg-gray-100 rounded"></div>
+                    </div>
+                </div>
+
+                <!-- System Messages -->
+                <div id="systemMessage" class="message mt-6 hidden p-3 rounded"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLoading() {
+            document.getElementById('status').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('status').classList.add('hidden');
+        }
+
+        function showMessage(type, text) {
+            const element = document.getElementById('systemMessage');
+            element.textContent = text;
+            element.classList.remove('hidden', 'error-bg', 'success-bg');
+            element.classList.add(type === 'error' ? 'error-bg' : 'success-bg');
+            setTimeout(() => {
+                element.classList.add('hidden');
+            }, 3000);
+        }
+
+        // AJAX GET Example
+        function fetchServerTime() {
+            showLoading();
+
+            fetch('/get_time')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('timeResult').textContent = `Server time: ${data.time}`;
+                    hideLoading();
+                    showMessage('green', 'Time fetched successfully!');
+                })
+                .catch(error => {
+                    hideLoading();
+                    showMessage('red', 'Error fetching time: ' + error);
+                });
+        }
+
+        // AJAX POST Example
+        function submitData() {
+            showLoading();
+            const name = document.getElementById('nameInput').value.trim();
+
+            fetch('/greet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: name }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('greetingResult').textContent = data.message;
+                    hideLoading();
+                    showMessage('green', 'Greeting received!');
+                })
+                .catch(error => {
+                    hideLoading();
+                    showMessage('red', 'Error submitting data: ' + error);
+                });
+        }
+
+        // Dynamic Content Loading
+        function loadDynamicContent() {
+            showLoading();
+
+            fetch('/dynamic_content')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('dynamicContent');
+                    container.innerHTML = `
+                        <h3 class="font-semibold text-gray-800">${data.title}</h3>
+                        <p class="text-gray-600 mt-1">${data.description}</p>
+                        <div class="mt-3 grid grid-cols-2 gap-2">
+                            ${data.items.map(item => `
+                                <div class="bg-white p-2 rounded border border-gray-200">
+                                    <h4 class="font-medium">${item.name}</h4>
+                                    <p class="text-sm text-gray-500">${item.value}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    hideLoading();
+                    showMessage('green', 'Content loaded!');
+                })
+                .catch(error => {
+                    hideLoading();
+                    showMessage('red', 'Error loading content: ' + error);
+                });
+        }
+    </script>
+</body>
+
+</html>

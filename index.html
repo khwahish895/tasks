@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeMade Connects - Bridging Hearts Through Food</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e74c3c;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::before {
+            content: "🏠";
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #e74c3c;
+        }
+
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.8), rgba(155, 89, 182, 0.8));
+            margin-top: 80px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #e74c3c;
+        }
+
+        .how-it-works {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .step {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            background: #e74c3c;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+
+        .registration {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .registration h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .reg-forms {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .form-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .form-btn {
+            width: 100%;
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .form-btn:hover {
+            background: #c0392b;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .reg-forms {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">HomeMade Connects</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#register">Register</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Bridging Hearts Through Food</h1>
+            <p>Connecting single mothers with flexible work opportunities while bringing the taste of home to those who
+                miss it most</p>
+            <div class="cta-buttons">
+                <a href="#register" class="btn btn-primary">Find Work as a Mom</a>
+                <a href="#register" class="btn btn-secondary">Order Home Food</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2>Why Choose HomeMade Connects?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👩‍👧‍👦</div>
+                    <h3>Empowering Single Mothers</h3>
+                    <p>Flexible part-time and full-time opportunities that work around your schedule. Cook from home
+                        while caring for your family.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏠</div>
+                    <h3>Authentic Home Food</h3>
+                    <p>Experience the warmth of home-cooked meals made with love by caring mothers who understand what
+                        comfort food means.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💼</div>
+                    <h3>Flexible Work Options</h3>
+                    <p>Choose between part-time daily meals, weekend specials, or full-time catering services. You
+                        control your schedule.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🍽️</div>
+                    <h3>Regular Meal Plans</h3>
+                    <p>Subscribe to daily, weekly, or monthly meal plans. Perfect for PG residents, hostel students, and
+                        working professionals.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Safe & Verified</h3>
+                    <p>All our cooking partners are verified and follow strict hygiene standards. Your safety is our
+                        priority.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">❤️</div>
+                    <h3>Community Support</h3>
+                    <p>Join a supportive community of mothers and food lovers. Share recipes, tips, and create lasting
+                        connections.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Register</h3>
+                    <p>Sign up as a cooking mother or a food customer. Complete your profile with preferences and
+                        requirements.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Match</h3>
+                    <p>Our platform connects you with the perfect match based on location, cuisine preferences, and
+                        availability.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Order & Cook</h3>
+                    <p>Customers place orders, mothers prepare fresh meals with love, and everyone enjoys the comfort of
+                        home food.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Delivery</h3>
+                    <p>Convenient pickup or delivery options available. Hot, fresh meals delivered right to your
+                        doorstep.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="register" class="registration">
+        <div class="container">
+            <h2>Join Our Community</h2>
+            <div class="reg-forms">
+                <div class="form-card">
+                    <h3>👩‍🍳 Register as a Cooking Mother</h3>
+                    <form id="motherForm">
+                        <div class="form-group">
+                            <label for="motherName">Full Name</label>
+                            <input type="text" id="motherName" name="motherName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="motherPhone">Phone Number</label>
+                            <input type="tel" id="motherPhone" name="motherPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="motherEmail">Email</label>
+                            <input type="email" id="motherEmail" name="motherEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="motherAddress">Address</label>
+                            <textarea id="motherAddress" name="motherAddress" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="cuisine">Cuisine Specialties</label>
+                            <select id="cuisine" name="cuisine" required>
+                                <option value="">Select Cuisine</option>
+                                <option value="north-indian">North Indian</option>
+                                <option value="south-indian">South Indian</option>
+                                <option value="gujarati">Gujarati</option>
+                                <option value="punjabi">Punjabi</option>
+                                <option value="bengali">Bengali</option>
+                                <option value="maharashtrian">Maharashtrian</option>
+                                <option value="rajasthani">Rajasthani</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="workType">Work Preference</label>
+                            <select id="workType" name="workType" required>
+                                <option value="">Select Work Type</option>
+                                <option value="part-time">Part-time (Few hours daily)</option>
+                                <option value="full-time">Full-time (Regular daily meals)</option>
+                                <option value="weekend">Weekend Only</option>
+                                <option value="flexible">Flexible Schedule</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="capacity">Daily Meal Capacity</label>
+                            <select id="capacity" name="capacity" required>
+                                <option value="">Select Capacity</option>
+                                <option value="1-5">1-5 people</option>
+                                <option value="6-10">6-10 people</option>
+                                <option value="11-20">11-20 people</option>
+                                <option value="20+">20+ people</option>
+                            </select>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="motherTerms" name="motherTerms" required>
+                            <label for="motherTerms">I agree to the terms and conditions</label>
+                        </div>
+                        <button type="submit" class="form-btn">Register as Cooking Mother</button>
+                    </form>
+                </div>
+
+                <div class="form-card">
+                    <h3>🍽️ Register as a Customer</h3>
+                    <form id="customerForm">
+                        <div class="form-group">
+                            <label for="customerName">Full Name</label>
+                            <input type="text" id="customerName" name="customerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPhone">Phone Number</label>
+                            <input type="tel" id="customerPhone" name="customerPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerEmail">Email</label>
+                            <input type="email" id="customerEmail" name="customerEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerAddress">Address</label>
+                            <textarea id="customerAddress" name="customerAddress" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerType">I am a</label>
+                            <select id="customerType" name="customerType" required>
+                                <option value="">Select Type</option>
+                                <option value="pg-resident">PG Resident</option>
+                                <option value="hostel-student">Hostel Student</option>
+                                <option value="working-professional">Working Professional</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cuisinePreference">Cuisine Preference</label>
+                            <select id="cuisinePreference" name="cuisinePreference" required>
+                                <option value="">Select Preference</option>
+                                <option value="north-indian">North Indian</option>
+                                <option value="south-indian">South Indian</option>
+                                <option value="gujarati">Gujarati</option>
+                                <option value="punjabi">Punjabi</option>
+                                <option value="bengali">Bengali</option>
+                                <option value="maharashtrian">Maharashtrian</option>
+                                <option value="rajasthani">Rajasthani</option>
+                                <option value="no-preference">No Preference</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="mealPlan">Meal Plan</label>
+                            <select id="mealPlan" name="mealPlan" required>
+                                <option value="">Select Plan</option>
+                                <option value="lunch-only">Lunch Only</option>
+                                <option value="dinner-only">Dinner Only</option>
+                                <option value="both-meals">Both Meals</option>
+                                <option value="all-meals">All Meals (Breakfast, Lunch, Dinner)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="budget">Budget Range (per meal)</label>
+                            <select id="budget" name="budget" required>
+                                <option value="">Select Budget</option>
+                                <option value="50-100">₹50-100</option>
+                                <option value="100-150">₹100-150</option>
+                                <option value="150-200">₹150-200</option>
+                                <option value="200+">₹200+</option>
+                            </select>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="customerTerms" name="customerTerms" required>
+                            <label for="customerTerms">I agree to the terms and conditions</label>
+                        </div>
+                        <button type="submit" class="form-btn">Register as Customer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <p>&copy; 2024 HomeMade Connects. Bridging hearts through food, one meal at a time.</p>
+            <p>Contact us: info@homemadeconnects.com | +91-9876543210</p>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>🎉 Registration Successful!</h2>
+            <p>Thank you for joining HomeMade Connects! We'll contact you soon to complete your verification process.
+            </p>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="closeModal()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form submission handlers
+        document.getElementById('motherForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            showSuccessModal();
+        });
+
+        document.getElementById('customerForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            showSuccessModal();
+        });
+
+        function showSuccessModal() {
+            document.getElementById('successModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            const modal = document.getElementById('successModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Close modal with X button
+        document.querySelector('.close').onclick = function () {
+            closeModal();
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some interactivity to feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+
+</html>
